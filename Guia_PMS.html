@@ -1,0 +1,2351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía PMS Newhotel Cloud - Global Hotel Panamá</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a2e4a;
+            --accent: #00b4a0;
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --text: #2d3748;
+            --text-light: #718096;
+            --border: #e2e8f0;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --danger: #f56565;
+            --info: #4299e1;
+        }
+
+        [data-theme="dark"] {
+            --bg: #1a202c;
+            --card-bg: #2d3748;
+            --text: #e2e8f0;
+            --text-light: #a0aec0;
+            --border: #4a5568;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .hotel-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-left: 2px solid var(--accent);
+            padding-left: 1.5rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .date-badge {
+            background: rgba(0, 180, 160, 0.2);
+            color: var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .theme-toggle {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background: var(--card-bg);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 100;
+        }
+
+        .search-box {
+            padding: 0 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .nav-section {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1.5rem;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: var(--bg);
+            color: var(--accent);
+        }
+
+        .nav-item.active {
+            background: rgba(0, 180, 160, 0.1);
+            color: var(--accent);
+            border-right: 3px solid var(--accent);
+        }
+
+        .nav-item .material-icons {
+            font-size: 20px;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            margin-top: 70px;
+            padding: 2rem;
+            min-height: calc(100vh - 70px);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+            scroll-margin-top: 90px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header .material-icons {
+            font-size: 2.5rem;
+            color: var(--accent);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .section-subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--accent);
+        }
+
+        .kpi-card.blue { border-left-color: var(--info); }
+        .kpi-card.red { border-left-color: var(--danger); }
+        .kpi-card.green { border-left-color: var(--success); }
+        .kpi-card.orange { border-left-color: var(--warning); }
+        .kpi-card.gray { border-left-color: var(--text-light); }
+
+        .kpi-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            overflow-x: auto;
+            display: block;
+        }
+
+        table thead {
+            background: var(--primary);
+            color: white;
+        }
+
+        table th, table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        table tbody tr:nth-child(even) {
+            background: var(--bg);
+        }
+
+        table tbody tr:hover {
+            background: rgba(0, 180, 160, 0.05);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-daily { background: #e6f7ff; color: #0066cc; }
+        .badge-admin { background: #fff3e0; color: #e65100; }
+        .badge-critical { background: #ffebee; color: #c62828; }
+        .badge-key { background: #f3e5f5; color: #7b1fa2; }
+
+        .callout {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+        }
+
+        .callout-tip {
+            background: #e8f5e9;
+            border-left-color: var(--success);
+            color: #2e7d32;
+        }
+
+        .callout-warning {
+            background: #fff3e0;
+            border-left-color: var(--warning);
+            color: #e65100;
+        }
+
+        .callout-danger {
+            background: #ffebee;
+            border-left-color: var(--danger);
+            color: #c62828;
+        }
+
+        .bar-chart {
+            margin: 1rem 0;
+        }
+
+        .bar-item {
+            margin-bottom: 1rem;
+        }
+
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .bar-fill {
+            height: 30px;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 999;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        .flow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .step-number {
+            min-width: 40px;
+            height: 40px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .step-content {
+            flex: 1;
+            padding-top: 0.5rem;
+        }
+
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1000;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hotel-name {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 1rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .date-badge {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .kpi-card {
+                padding: 1rem;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            table th, table td {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .flow-step {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .step-number {
+                margin-bottom: 0.5rem;
+            }
+
+            .back-to-top {
+                width: 45px;
+                height: 45px;
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-right {
+                gap: 0.5rem;
+            }
+
+            .date-badge {
+                display: none;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .section-header .material-icons {
+                font-size: 2rem;
+            }
+
+            .breadcrumb {
+                font-size: 0.8rem;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            table {
+                font-size: 0.75rem;
+            }
+
+            .badge {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <span class="material-icons">menu</span>
+            </button>
+            <div class="logo">NEWHOTEL</div>
+            <div class="hotel-name">Global Hotel Panamá</div>
+        </div>
+        <div class="header-right">
+            <div class="date-badge">📅 22/05/2026</div>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <span class="material-icons">dark_mode</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="sidebar-overlay" onclick="toggleMenu()"></div>
+
+    <nav class="sidebar">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Buscar en la guía..." onkeyup="filterSections()">
+        </div>
+        <div class="nav-section">
+            <a href="#resumen" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">dashboard</span>
+                <span>Resumen (Dashboard)</span>
+            </a>
+            <a href="#reservas" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">event</span>
+                <span>Módulo: Reservas</span>
+            </a>
+            <a href="#recepcion" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">room_service</span>
+                <span>Módulo: Recepción</span>
+            </a>
+            <a href="#movimientos" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">local_atm</span>
+                <span>Módulo: Movimientos</span>
+            </a>
+            <a href="#facturar" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">receipt</span>
+                <span>Módulo: Facturar</span>
+            </a>
+            <a href="#plannings" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">table_chart</span>
+                <span>Módulo: Plannings</span>
+            </a>
+            <a href="#tarifas" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">monetization_on</span>
+                <span>Módulo: Tarifas</span>
+            </a>
+            <a href="#ama-llaves" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">cleaning_services</span>
+                <span>Módulo: Ama de Llaves</span>
+            </a>
+            <a href="#perfiles" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">contacts</span>
+                <span>Módulo: Perfiles</span>
+            </a>
+            <a href="#cuentas-cobrar" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">account_balance_wallet</span>
+                <span>Cuentas por Cobrar</span>
+            </a>
+            <a href="#salas" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">groups</span>
+                <span>Salas de Reuniones</span>
+            </a>
+            <a href="#reportes" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">assignment</span>
+                <span>Módulo: Reportes</span>
+            </a>
+            <a href="#configuraciones" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">settings</span>
+                <span>Configuraciones</span>
+            </a>
+            <a href="#administracion" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">build</span>
+                <span>Administración</span>
+            </a>
+            <a href="#usuarios" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">person</span>
+                <span>Usuarios</span>
+            </a>
+            <a href="#flujo-diario" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">play_circle_filled</span>
+                <span>Flujo: Trabajo Diario</span>
+            </a>
+            <a href="#flujo-checkin" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">login</span>
+                <span>Flujo: Check-In</span>
+            </a>
+            <a href="#flujo-checkout" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">logout</span>
+                <span>Flujo: Check-Out</span>
+            </a>
+            <a href="#flujo-reserva" class="nav-item" onclick="setActive(this)">
+                <span class="material-icons">add_circle</span>
+                <span>Flujo: Nueva Reserva</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="breadcrumb">
+            <span class="material-icons">home</span>
+            <span id="breadcrumbText">Inicio</span>
+        </div>
+
+       
+        <section id="sumario" class="section">
+            <div class="section-header">
+                <span class="material-icons">dashboard</span>
+                <div>
+                    <h1 class="section-title">Resumen (Dashboard)</h1>
+                    <p class="section-subtitle">Primera pantalla al entrar - Radiografía instantánea del hotel</p>
+                </div>
+            </div>
+
+            <div class="callout callout-tip">
+                💡 <strong>Rutina diaria recomendada:</strong> Abre el Resumen cada mañana. En 30 segundos sabes cuántos check-ins esperan, cuántos check-outs pendientes tienes y cómo está la ocupación. Es tu punto de partida obligatorio.
+            </div>
+
+            <h3>Estado Actual del Hotel (Ejemplo del 22/05/2026)</h3>
+            <div class="kpi-grid">
+                <div class="kpi-card blue">
+                    <div class="kpi-label">Check-In Pendientes</div>
+                    <div class="kpi-value">9</div>
+                </div>
+                <div class="kpi-card red">
+                    <div class="kpi-label">Check-Out Pendientes</div>
+                    <div class="kpi-value">3</div>
+                </div>
+                <div class="kpi-card green">
+                    <div class="kpi-label">Ocupación Actual</div>
+                    <div class="kpi-value">36%</div>
+                </div>
+                <div class="kpi-card blue">
+                    <div class="kpi-label">Habitaciones Ocupadas</div>
+                    <div class="kpi-value">21</div>
+                </div>
+                <div class="kpi-card gray">
+                    <div class="kpi-label">Adultos en Casa</div>
+                    <div class="kpi-value">34</div>
+                </div>
+                <div class="kpi-card green">
+                    <div class="kpi-label">Precio Medio Diario</div>
+                    <div class="kpi-value">$121.06</div>
+                </div>
+                <div class="kpi-card green">
+                    <div class="kpi-label">Cuartos Limpios</div>
+                    <div class="kpi-value">41</div>
+                </div>
+                <div class="kpi-card orange">
+                    <div class="kpi-label">Cuartos Sucios</div>
+                    <div class="kpi-value">19</div>
+                </div>
+                <div class="kpi-card gray">
+                    <div class="kpi-label">Habitaciones Inactivas</div>
+                    <div class="kpi-value">0</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Ocupación por Tipo de Habitación</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tipo de Habitación</th>
+                            <th>% Ocupación</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>CIVK</strong> - City View King</td>
+                            <td>39.02%</td>
+                            <td><span class="badge badge-daily">Disponible</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>CIVD</strong> - City View Double</td>
+                            <td>20.00%</td>
+                            <td><span class="badge badge-daily">Disponible</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>EXEK</strong> - Executive King</td>
+                            <td>100.00%</td>
+                            <td><span class="badge badge-critical">Completo</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>CRST</strong> - Crystal Suite</td>
+                            <td>20.00%</td>
+                            <td><span class="badge badge-daily">Disponible</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>Top 4 Nacionalidades del Último Mes</h3>
+                <div class="bar-chart">
+                    <div class="bar-item">
+                        <div class="bar-label">
+                            <span>🇵🇦 Panamá</span>
+                            <span><strong>218</strong> huéspedes</span>
+                        </div>
+                        <div class="bar-fill" style="width: 100%;">218</div>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar-label">
+                            <span>🇺🇸 Estados Unidos</span>
+                            <span><strong>141</strong> huéspedes</span>
+                        </div>
+                        <div class="bar-fill" style="width: 65%;">141</div>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar-label">
+                            <span>🇨🇴 Colombia</span>
+                            <span><strong>107</strong> huéspedes</span>
+                        </div>
+                        <div class="bar-fill" style="width: 49%;">107</div>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar-label">
+                            <span>🇪🇸 España</span>
+                            <span><strong>34</strong> huéspedes</span>
+                        </div>
+                        <div class="bar-fill" style="width: 16%;">34</div>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar-label">
+                            <span>🌍 Otros</span>
+                            <span><strong>435</strong> huéspedes</span>
+                        </div>
+                        <div class="bar-fill" style="width: 100%; opacity: 0.7;">435</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: RESERVAS -->
+        <section id="reservas" class="section">
+            <div class="section-header">
+                <span class="material-icons">event</span>
+                <div>
+                    <h1 class="section-title">Módulo: Reservas</h1>
+                    <p class="section-subtitle">Gestión completa de reservas del hotel</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Submenús Disponibles</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Cuándo Usarlo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Gestión Reservas</strong></td>
+                            <td>Listado completo de reservas activas. Busca por nombre, fecha, número o habitación</td>
+                            <td>Para modificar, cancelar o consultar una reserva existente</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Histórico de Reservas</strong></td>
+                            <td>Archivo de reservas cerradas (check-outs, cancelaciones)</td>
+                            <td>Para verificar estancias pasadas o recuperar datos de huésped que vuelve</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Nueva Reserva</strong></td>
+                            <td>Formulario de creación manual de reservas</td>
+                            <td>Cuando recibes reserva por teléfono, walk-in o email</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Gestión de Grupos</strong></td>
+                            <td>Bloque de habitaciones para grupos, tarifas grupales y lista de participantes</td>
+                            <td>Congresos, bodas, tours con 10+ habitaciones</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Disponibilidad</strong></td>
+                            <td>Calendario con disponibilidad por tipo de habitación y fecha</td>
+                            <td>Para responder consultas de disponibilidad al instante</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: RECEPCIÓN -->
+        <section id="recepcion" class="section">
+            <div class="section-header">
+                <span class="material-icons">room_service</span>
+                <div>
+                    <h1 class="section-title">Módulo: Recepción</h1>
+                    <p class="section-subtitle">El módulo más utilizado en el día a día</p>
+                </div>
+            </div>
+
+            <div class="callout callout-danger">
+                ⚠️ <strong>IMPORTANTE:</strong> Nunca ejecutes el Auditor Nocturno si hay check-ins pendientes del día. Primero completa todos los ingresos, luego cierra el día.
+            </div>
+
+            <div class="card">
+                <h3>Herramientas de Recepción</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Cuándo Usarlo</th>
+                            <th>Frecuencia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Panel Interactivo</strong></td>
+                            <td>Cuadrícula de habitaciones con estados: Ocupada/Libre/Sucia/Mantenimiento</td>
+                            <td>Check-in, check-out, cambios de habitación</td>
+                            <td><span class="badge badge-daily">Diario</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Planning Alojamientos</strong></td>
+                            <td>Vista de Gantt por habitación. Arrastra reservas para cambiar fechas o habitaciones</td>
+                            <td>Ver solapamientos y disponibilidad visual</td>
+                            <td><span class="badge badge-daily">Diario</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Huéspedes</strong></td>
+                            <td>Lista de in-house. Ver cuenta, añadir cargos, preferencias</td>
+                            <td>Durante el turno</td>
+                            <td><span class="badge badge-daily">Diario</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Búsqueda Precios</strong></td>
+                            <td>Consultador rápido de tarifas por fecha/tipo/personas sin crear reserva</td>
+                            <td>Cotizaciones rápidas</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Asignar Alojamientos - Automático</strong></td>
+                            <td>El sistema asigna habitaciones físicas automáticamente</td>
+                            <td>Al inicio de cada turno, antes de abrir</td>
+                            <td><span class="badge badge-daily">Diario</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Asignación Manual</strong></td>
+                            <td>Tú asignas habitación física a cada reserva</td>
+                            <td>Huéspedes VIP o con preferencias especiales</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Auditor Nocturno</strong></td>
+                            <td>Cierra el día contable, genera cargos automáticos, avanza el calendario</td>
+                            <td>Solo turno nocturno (1-2am)</td>
+                            <td><span class="badge badge-critical">Crítico</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Monitor de Servicios</strong></td>
+                            <td>Centro de peticiones: toallas, cuna, room service</td>
+                            <td>Durante el turno</td>
+                            <td><span class="badge badge-daily">Diario</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Emisión Llave</strong></td>
+                            <td>Control de tarjetas-llave (integración cerraduras)</td>
+                            <td>En cada check-in</td>
+                            <td><span class="badge badge-daily">Diario</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 4: MOVIMIENTOS -->
+        <section id="movimientos" class="section">
+            <div class="section-header">
+                <span class="material-icons">local_atm</span>
+                <div>
+                    <h1 class="section-title">Módulo: Movimientos</h1>
+                    <p class="section-subtitle">Gestión financiera de transacciones</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Histórico de Transacciones</strong></td>
+                            <td>Registro de todos los cargos y abonos. Búsqueda por fecha, huésped, servicio. Esencial para auditorías</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cuentas Corrientes</strong></td>
+                            <td>Saldo en tiempo real de cuentas abiertas de huéspedes en casa</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cuentas de Control</strong></td>
+                            <td>Cuentas especiales para ajustes contables internos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Autorizaciones de Pago</strong></td>
+                            <td>Autorizaciones de tarjeta solicitadas. Verifica vigencia antes de cargar</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pagos Pendientes</strong></td>
+                            <td>Cobros no ejecutados: empresas a crédito, grupos pendientes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Acciones de Pagos</strong></td>
+                            <td>Herramientas para cobros masivos o acciones sobre grupos de pagos</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 5: FACTURAR -->
+        <section id="facturar" class="section">
+            <div class="section-header">
+                <span class="material-icons">receipt</span>
+                <div>
+                    <h1 class="section-title">Módulo: Facturar</h1>
+                    <p class="section-subtitle">Emisión y gestión de documentos fiscales</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Cuándo Usarlo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Histórico de Documentos</strong></td>
+                            <td>Archivo de facturas emitidas. Búsqueda por número, fecha, cliente</td>
+                            <td>Consulta</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Facturación Múltiple</strong></td>
+                            <td>Genera facturas para varias reservas a la vez</td>
+                            <td>Grupos o cierre mensual con empresas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Facturación Automática</strong></td>
+                            <td>Reglas para facturación automática por horario o empresa</td>
+                            <td>Configuración periódica</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Facturación de Entidades</strong></td>
+                            <td>Facturación directa a empresas/agencias con cuenta abierta</td>
+                            <td>Cierre mensual</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Facturación de Grupos</strong></td>
+                            <td>Factura consolidada para un grupo</td>
+                            <td>Al cierre del grupo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Nota de Crédito</strong></td>
+                            <td>Devolver dinero o corregir errores en facturas emitidas</td>
+                            <td>Correcciones post-factura</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Nota Débito</strong></td>
+                            <td>Añadir cargos adicionales a factura ya cerrada</td>
+                            <td>Cargos olvidados</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Factura Proforma</strong></td>
+                            <td>Documento previo como presupuesto</td>
+                            <td>Antes del check-out a petición</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 6: PLANNINGS -->
+        <section id="plannings" class="section">
+            <div class="section-header">
+                <span class="material-icons">table_chart</span>
+                <div>
+                    <h1 class="section-title">Módulo: Plannings</h1>
+                    <p class="section-subtitle">Herramientas de planificación y análisis estadístico</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Disponibilidad</strong></td>
+                            <td>Calendario por tipo de habitación, disponibilidad día a día</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Allotments</strong></td>
+                            <td>Cupos bloqueados para touroperadores o agencias</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Recursos Adicionales</strong></td>
+                            <td>Disponibilidad de salones, equipos, etc.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Entidades, Contratos</strong></td>
+                            <td>Empresas con contrato activo y sus reservas generadas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Orígenes de Mercado</strong></td>
+                            <td>De dónde viene cada empresa (web, teléfono, agencia)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Segmentos de Mercado</strong></td>
+                            <td>En qué segmento opera cada empresa (corporativo, vacacional, etc.)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Nacionalidades</strong></td>
+                            <td>Estadísticas de procedencia de huéspedes. Vital para marketing</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pensiones</strong></td>
+                            <td>Planificación de regímenes alimenticios contratados</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Booking Position</strong></td>
+                            <td>Antelación de reservas: ¿cuántos días antes reservan tus huéspedes?</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Plannings - Turnos</strong></td>
+                            <td>Planificación de turnos del personal</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 7: TARIFAS -->
+        <section id="tarifas" class="section">
+            <div class="section-header">
+                <span class="material-icons">monetization_on</span>
+                <div>
+                    <h1 class="section-title">Módulo: Tarifas</h1>
+                    <p class="section-subtitle">Gestión de precios y contratos</p>
+                </div>
+            </div>
+
+            <div class="callout callout-tip">
+                💡 <strong>Flujo recomendado:</strong> Define Tarifas Precios → Configura Control de Ventas para fechas especiales → Crea Contratos para empresas → Revisa Cupos para evitar sobreventas.
+            </div>
+
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Acceso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Tarifa Precios</strong></td>
+                            <td>Tarifas base con nombre, código, vigencia, tipo de habitación y precio</td>
+                            <td><span class="badge badge-admin">Solo Admin</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Contratos</strong></td>
+                            <td>Tarifas negociadas con empresas o agencias. Precio especial, vigencia, condiciones</td>
+                            <td><span class="badge badge-admin">Solo Admin</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Early Bookings</strong></td>
+                            <td>Descuentos por reserva anticipada (ej: -15% con 30 días de antelación)</td>
+                            <td><span class="badge badge-admin">Solo Admin</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Control de Ventas</strong></td>
+                            <td>Restricciones: mínimo de noches, cierre de ventas, restricciones de llegada/salida</td>
+                            <td><span class="badge badge-admin">Solo Admin</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cupos - Habitaciones</strong></td>
+                            <td>Máximo de habitaciones por tipo disponibles para venta por fecha</td>
+                            <td><span class="badge badge-admin">Solo Admin</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Allotment - Recursos</strong></td>
+                            <td>Cupos para recursos no habitacionales</td>
+                            <td><span class="badge badge-admin">Solo Admin</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 8: AMA DE LLAVES -->
+        <section id="ama-llaves" class="section">
+            <div class="section-header">
+                <span class="material-icons">cleaning_services</span>
+                <div>
+                    <h1 class="section-title">Módulo: Ama de Llaves</h1>
+                    <p class="section-subtitle">Control de limpieza y mantenimiento de habitaciones</p>
+                </div>
+            </div>
+
+            <div class="callout callout-warning">
+                ⚠️ <strong>Las discrepancias deben resolverse cada día sin excepción.</strong> Una habitación que el sistema marca libre pero el ama de llaves reporta ocupada puede indicar un huésped no registrado.
+            </div>
+
+            <div class="card">
+                <h3>Estados de Habitación</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Estado</th>
+                            <th>Color</th>
+                            <th>Significado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Limpia - Libre</strong></td>
+                            <td><span style="color: #48bb78; font-size: 1.5rem;">●</span> Verde</td>
+                            <td>Lista para asignar a nuevo huésped</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sucia - Libre</strong></td>
+                            <td><span style="color: #ecc94b; font-size: 1.5rem;">●</span> Amarillo</td>
+                            <td>Necesita limpieza, ya salió el huésped</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ocupada - Limpia</strong></td>
+                            <td><span style="color: #4299e1; font-size: 1.5rem;">●</span> Azul</td>
+                            <td>Huésped dentro, habitación en orden</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ocupada - Sucia</strong></td>
+                            <td><span style="color: #ed8936; font-size: 1.5rem;">●</span> Naranja</td>
+                            <td>Huésped dentro, pendiente de limpieza</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Inactiva / OOO</strong></td>
+                            <td><span style="color: #f56565; font-size: 1.5rem;">●</span> Rojo</td>
+                            <td>Fuera de servicio, no vender</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>Herramientas del Módulo</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Estado Habitación</strong></td>
+                            <td>Mapa de estados de todas las habitaciones. Ama de llaves actualiza aquí al limpiar</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Inactividades</strong></td>
+                            <td>Habitaciones fuera de servicio por reparaciones mayores. El sistema no las vende</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Discrepancias</strong></td>
+                            <td>Diferencias entre sistema y reporte físico. Deben resolverse diariamente</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fuera de Alquiler</strong></td>
+                            <td>Bloqueos temporales sin daño físico (VIP, inspección)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Averías</strong></td>
+                            <td>Registro de problemas en habitaciones asignados a técnico con seguimiento</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Perdidos y Encontrados</strong></td>
+                            <td>Inventario de objetos dejados por huéspedes</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 9: PERFILES -->
+        <section id="perfiles" class="section">
+            <div class="section-header">
+                <span class="material-icons">contacts</span>
+                <div>
+                    <h1 class="section-title">Módulo: Perfiles</h1>
+                    <p class="section-subtitle">Base de datos de huéspedes y empresas</p>
+                </div>
+            </div>
+
+            <div class="callout callout-tip">
+                💡 <strong>Cardex - La memoria del hotel:</strong> Antes de crear cualquier reserva, busca siempre primero en el Cardex. Si el huésped ya existe, usa su perfil para no duplicar registros y mantener su historial completo.
+            </div>
+
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Importancia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Entidades</strong></td>
+                            <td>Base de datos de empresas, agencias y touroperadores. Condiciones de facturación, crédito y tarifas</td>
+                            <td><span class="badge badge-daily">Alta</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cardex</strong></td>
+                            <td>Base de datos maestra de todos los huéspedes: historial, preferencias, documentos. La memoria del hotel</td>
+                            <td><span class="badge badge-critical">Crítica</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bancos</strong></td>
+                            <td>Registro de bancos para pagos y transferencias</td>
+                            <td>Media</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Incidentes de Huésped</strong></td>
+                            <td>Registro de incidentes relacionados con huéspedes específicos</td>
+                            <td><span class="badge badge-daily">Alta</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Panel de Incidencias</strong></td>
+                            <td>Vista global de todas las incidencias abiertas</td>
+                            <td><span class="badge badge-daily">Alta</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Asignación de Incidentes</strong></td>
+                            <td>Asignar incidentes a responsables para resolución</td>
+                            <td><span class="badge badge-daily">Alta</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 10: CUENTAS POR COBRAR -->
+        <section id="cuentas-cobrar" class="section">
+            <div class="section-header">
+                <span class="material-icons">account_balance_wallet</span>
+                <div>
+                    <h1 class="section-title">Módulo: Cuentas por Cobrar</h1>
+                    <p class="section-subtitle">Gestión de cobros y cuentas de clientes</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Clientes</strong></td>
+                            <td>Cuentas abiertas de clientes a crédito. Ver saldos pendientes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Proveedores</strong></td>
+                            <td>Cuentas con proveedores del hotel</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Grupo de Cuentas</strong></td>
+                            <td>Agrupación de cuentas para análisis</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cuenta Bancaria</strong></td>
+                            <td>Cuentas bancarias registradas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Consulta de Recibos</strong></td>
+                            <td>Recibos emitidos y su estado de cobro</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Histórico de Transacciones</strong></td>
+                            <td>Movimientos completos en cuentas de clientes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Extractos - Detalles</strong></td>
+                            <td>Estado de cuenta por cliente para enviar como resumen mensual</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Modelo de Carta de Reclamación</strong></td>
+                            <td>Plantillas para cobrar deudas vencidas</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 11: SALAS DE REUNIONES -->
+        <section id="salas" class="section">
+            <div class="section-header">
+                <span class="material-icons">groups</span>
+                <div>
+                    <h1 class="section-title">Módulo: Salas de Reuniones</h1>
+                    <p class="section-subtitle">Gestión de eventos y espacios para reuniones</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Gerente de Reuniones</strong></td>
+                            <td>Visión global de todos los eventos y reuniones</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Nueva Reserva</strong></td>
+                            <td>Formulario: sala, fecha, horario, capacidad, equipamiento, catering</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Planning Mensual</strong></td>
+                            <td>Calendario mensual de ocupación de salas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Planning Semanal</strong></td>
+                            <td>Calendario semanal de ocupación de salas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Disponibilidad Horas</strong></td>
+                            <td>Consulta de disponibilidad en franjas horarias</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tipos de Recursos</strong></td>
+                            <td>Inventario: sillas, proyectores, pantallas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tipos de Distribución</strong></td>
+                            <td>Disposición de sala: teatro, clase, U, banquete</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Paquetes</strong></td>
+                            <td>Coffee break, almuerzo de trabajo, día completo</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 12: REPORTES -->
+        <section id="reportes" class="section">
+            <div class="section-header">
+                <span class="material-icons">assignment</span>
+                <div>
+                    <h1 class="section-title">Módulo: Reportes</h1>
+                    <p class="section-subtitle">Informes y estadísticas del hotel</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Reportes Clave - Uso Diario</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Reporte</th>
+                            <th>Frecuencia</th>
+                            <th>Para Qué Sirve</th>
+                            <th>Prioridad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Resumen diario de ocupación</strong></td>
+                            <td>Diario (mañana)</td>
+                            <td>Ver ocupación, llegadas, salidas del día</td>
+                            <td><span class="badge badge-daily">Diario</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reporte de llegadas del día</strong></td>
+                            <td>Cada turno</td>
+                            <td>Preparar check-ins</td>
+                            <td><span class="badge badge-daily">Diario</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reporte de salidas del día</strong></td>
+                            <td>Cada turno</td>
+                            <td>Preparar check-outs</td>
+                            <td><span class="badge badge-daily">Diario</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Resumen financiero diario</strong></td>
+                            <td>Diario (cierre)</td>
+                            <td>Cuadrar caja</td>
+                            <td><span class="badge badge-daily">Diario</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reportes Auditor Nocturno</strong></td>
+                            <td>Diario (mañana)</td>
+                            <td>Movimientos del día anterior, cierres</td>
+                            <td><span class="badge badge-critical">Clave</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Estadísticas ocupación mensual</strong></td>
+                            <td>Mensual</td>
+                            <td>Reuniones de dirección</td>
+                            <td><span class="badge badge-admin">Gerencia</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Top agencias/empresas</strong></td>
+                            <td>Mensual</td>
+                            <td>Análisis comercial</td>
+                            <td><span class="badge badge-admin">Gerencia</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>Herramientas de Reportes</h3>
+                <ul style="line-height: 2;">
+                    <li><strong>Report Manager:</strong> Biblioteca completa de reportes por categoría. Selecciona categoría → reporte → rango de fechas → formato (PDF/Excel)</li>
+                    <li><strong>Favoritos:</strong> Guarda reportes de uso diario para acceso con un clic</li>
+                    <li><strong>Exportar:</strong> Extrae datos estructurados para Excel o sistemas contables externos</li>
+                    <li><strong>Reportes Auditor Nocturno:</strong> Generados automáticamente por el proceso nocturno</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 13: CONFIGURACIONES -->
+        <section id="configuraciones" class="section">
+            <div class="section-header">
+                <span class="material-icons">settings</span>
+                <div>
+                    <h1 class="section-title">Módulo: Configuraciones</h1>
+                    <p class="section-subtitle">Define cómo funciona el sistema - Solo administradores</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Subcategoría</th>
+                            <th>Qué Configura</th>
+                            <th>Acceso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Mercados → Segmentos</strong></td>
+                            <td>Corporativo, Vacacional, Gobierno, OTA, Walk-in</td>
+                            <td><span class="badge badge-admin">Solo Admin</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mercados → Orígenes</strong></td>
+                            <td>Booking.com, Web propia, Teléfono, Walk-in, Agencia</td>
+                            <td><span class="badge badge-admin">Solo Admin</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Movimientos → Departamentos</strong></td>
+                            <td>Habitaciones, Restaurante, Spa, Lavandería</td>
+                            <td><span class="badge badge-admin">Solo Admin</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Recursos → Habitaciones</strong></td>
+                            <td>Inventario técnico completo</td>
+                            <td><span class="badge badge-admin">Solo Admin</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Recursos → Tipos de Habitación</strong></td>
+                            <td>CIVK, CIVD, EXEK, CRST y sus características</td>
+                            <td><span class="badge badge-admin">Solo Admin</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reservas → Tipos de Garantía</strong></td>
+                            <td>Tarjeta, depósito, sin garantía</td>
+                            <td><span class="badge badge-admin">Solo Admin</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reservas → Modalidades de Pensión</strong></td>
+                            <td>SA (Solo Alojamiento), BB (Desayuno), HB (Media Pensión), FB (Pensión Completa)</td>
+                            <td><span class="badge badge-admin">Solo Admin</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Financiero → Métodos de Pago</strong></td>
+                            <td>Efectivo, tarjeta, transferencia, crédito</td>
+                            <td><span class="badge badge-admin">Solo Admin</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Seguridad → Usuarios</strong></td>
+                            <td>Crear/modificar accesos al sistema</td>
+                            <td><span class="badge badge-admin">Solo Admin</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Seguridad → Perfiles</strong></td>
+                            <td>Qué puede ver/hacer cada rol (recepcionista, gerente, etc.)</td>
+                            <td><span class="badge badge-admin">Solo Admin</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 14: ADMINISTRACIÓN -->
+        <section id="administracion" class="section">
+            <div class="section-header">
+                <span class="material-icons">build</span>
+                <div>
+                    <h1 class="section-title">Módulo: Administración</h1>
+                    <p class="section-subtitle">Herramientas técnicas y de auditoría</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Acceso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Configuraciones</strong></td>
+                            <td>Parámetros generales: nombre hotel, idioma, zona horaria, moneda base, hora check-in/out</td>
+                            <td><span class="badge badge-admin">Solo Admin</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Registros (Logs)</strong></td>
+                            <td>Auditoría de cambios: quién modificó tarifas, reservas, exportaciones. Fundamental para investigar discrepancias</td>
+                            <td><span class="badge badge-admin">Auditoría</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Control de Datos</strong></td>
+                            <td>Limpieza e integridad de la base de datos</td>
+                            <td><span class="badge badge-admin">Técnico</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Movimientos Adicionales</strong></td>
+                            <td>Movimientos contables especiales no habituales</td>
+                            <td>Contabilidad</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 15: USUARIOS -->
+        <section id="usuarios" class="section">
+            <div class="section-header">
+                <span class="material-icons">person</span>
+                <div>
+                    <h1 class="section-title">Módulo: Usuarios</h1>
+                    <p class="section-subtitle">Comunicación y tareas internas</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Notificar a</strong></td>
+                            <td>Enviar notificaciones internas a otros usuarios del sistema</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tareas</strong></td>
+                            <td>Lista de tareas pendientes del usuario conectado. Útil para traspaso entre turnos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tipos de Tarea</strong></td>
+                            <td>Categorías de tareas asignables</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 16: FLUJO TRABAJO DIARIO -->
+        <section id="flujo-diario" class="section">
+            <div class="section-header">
+                <span class="material-icons">play_circle_filled</span>
+                <div>
+                    <h1 class="section-title">Flujo: Trabajo Diario Completo</h1>
+                    <p class="section-subtitle">Rutina recomendada para cada turno</p>
+                </div>
+            </div>
+
+            <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem;">
+                <h3 style="color: white; margin-bottom: 1rem;">🌅 AL INICIAR EL TURNO DE MAÑANA</h3>
+            </div>
+
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Abrir el Resumen (Dashboard)</div>
+                        <p>Revisa los indicadores clave: check-ins pendientes, check-outs pendientes y ocupación actual. Esto te da una visión completa del día en 30 segundos.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Leer Reportes del Auditor Nocturno</div>
+                        <p>Ve a <strong>Reportes → Reportes Auditor Nocturno</strong> y lee el resumen del cierre del día anterior. Verifica que todo esté en orden.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Asignar Habitaciones Automáticamente</div>
+                        <p>Ve a <strong>Recepción → Asignar Alojamientos (Automático)</strong>. El sistema asignará habitaciones físicas a todas las llegadas del día.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-title">Revisar Estado de Habitaciones</div>
+                        <p>Ve a <strong>Ama de Llaves → Estado Habitación</strong> y confirma qué habitaciones están limpias y listas para recibir huéspedes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 2rem; margin-top: 2rem;">
+                <h3 style="color: white; margin-bottom: 1rem;">☀️ DURANTE EL TURNO</h3>
+            </div>
+
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <div class="step-title">Gestionar Check-Ins</div>
+                        <p>Usa el <strong>Panel Interactivo</strong> o <strong>Gestión Reservas</strong> para hacer check-in a los huéspedes que llegan. Verifica documentos y emite tarjetas-llave.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <div class="step-title">Gestionar Check-Outs</div>
+                        <p>Revisa las cuentas de los huéspedes que salen, genera facturas, cobra según el método de pago acordado y marca el check-out en el sistema.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">7</div>
+                    <div class="step-content">
+                        <div class="step-title">Atender Peticiones de Servicio</div>
+                        <p>Revisa el <strong>Monitor de Servicios</strong> regularmente para atender solicitudes de huéspedes: toallas extra, cuna, room service, etc.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">8</div>
+                    <div class="step-content">
+                        <div class="step-title">Registrar Incidencias</div>
+                        <p>Si ocurre algún problema o incidente, regístralo inmediatamente en <strong>Perfiles → Incidencias</strong> para su seguimiento.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 2rem; margin-top: 2rem;">
+                <h3 style="color: white; margin-bottom: 1rem;">🌙 AL CERRAR EL TURNO DE NOCHE</h3>
+            </div>
+
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">9</div>
+                    <div class="step-content">
+                        <div class="step-title">Verificar Check-Ins Completados</div>
+                        <p>Asegúrate de que TODOS los check-ins del día estén completados. No debe quedar ninguno pendiente.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">10</div>
+                    <div class="step-content">
+                        <div class="step-title">Revisar Cuentas Corrientes</div>
+                        <p>Ve a <strong>Movimientos → Cuentas Corrientes</strong> y <strong>Cuentas de Control</strong> para verificar que todo esté cuadrado.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">11</div>
+                    <div class="step-content">
+                        <div class="step-title">Ejecutar el Auditor Nocturno</div>
+                        <p><strong>⚠️ CRÍTICO:</strong> Solo después de la 1am y cuando todo esté listo. Ve a <strong>Recepción → Auditor Nocturno</strong> y ejecuta el cierre del día.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">12</div>
+                    <div class="step-content">
+                        <div class="step-title">Dejar Reportes Disponibles</div>
+                        <p>Descarga los <strong>Reportes del Auditor Nocturno</strong> para que estén disponibles para el turno de mañana.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 17: FLUJO CHECK-IN -->
+        <section id="flujo-checkin" class="section">
+            <div class="section-header">
+                <span class="material-icons">login</span>
+                <div>
+                    <h1 class="section-title">Flujo: Check-In Paso a Paso</h1>
+                    <p class="section-subtitle">Cómo registrar la entrada de un huésped</p>
+                </div>
+            </div>
+
+            <div class="callout callout-tip">
+                💡 <strong>Antes de empezar:</strong> Asegúrate de que la habitación esté asignada y en estado "Limpia". Si no está asignada, usa la asignación automática o manual primero.
+            </div>
+
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">🔍</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 1: Buscar la Reserva</div>
+                        <p>Ve a <strong>Recepción → Panel Interactivo</strong> o <strong>Reservas → Gestión Reservas</strong></p>
+                        <p>Busca la reserva por:</p>
+                        <ul>
+                            <li>Apellido del huésped</li>
+                            <li>Número de confirmación</li>
+                            <li>Número de habitación asignada</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">🏠</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 2: Verificar la Habitación</div>
+                        <p>Confirma que:</p>
+                        <ul>
+                            <li>La habitación esté <strong>asignada</strong> (tiene un número específico)</li>
+                            <li>El estado sea <strong>"Limpia"</strong> (círculo verde)</li>
+                            <li>Si no está limpia, contacta al Ama de Llaves antes de continuar</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">🪪</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 3: Documentar al Huésped</div>
+                        <p><strong>⚠️ OBLIGATORIO POR LEY:</strong> Registra el número de identificación o pasaporte del huésped.</p>
+                        <p>También verifica:</p>
+                        <ul>
+                            <li>Nombre completo correcto</li>
+                            <li>Nacionalidad</li>
+                            <li>Datos de contacto (email, teléfono)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">✅</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 4: Hacer Click en Check-In</div>
+                        <p>En la reserva, haz clic en el botón <strong>"Check-In"</strong></p>
+                        <p>El sistema te pedirá confirmar los datos. Revísalos cuidadosamente antes de continuar.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">💳</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 5: Confirmar Modalidad de Pago</div>
+                        <p>Selecciona cómo pagará el huésped:</p>
+                        <ul>
+                            <li><strong>Tarjeta de crédito:</strong> Toma los datos y haz una pre-autorización si es política del hotel</li>
+                            <li><strong>Efectivo:</strong> Puede requerir un depósito</li>
+                            <li><strong>Cuenta empresa:</strong> Verifica que la empresa tenga crédito aprobado</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">🔑</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 6: Emitir Tarjeta-Llave</div>
+                        <p>Ve a <strong>Recepción → Interfaces Locales → Emisión Llave</strong></p>
+                        <p>Registra la emisión de la tarjeta-llave para la habitación. Si tu hotel tiene sistema integrado, la tarjeta se programará automáticamente.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">✅</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 7: Check-In Completado</div>
+                        <p>El sistema automáticamente:</p>
+                        <ul>
+                            <li>Cambia el estado de la habitación a <strong>"Ocupado"</strong></li>
+                            <li>Registra la hora de entrada</li>
+                            <li>Abre la cuenta del huésped para cargos</li>
+                        </ul>
+                        <p><strong>Entrega al huésped:</strong> Tarjeta-llave, información del WiFi, horarios de desayuno y cualquier información relevante del hotel.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="callout callout-warning">
+                ⚠️ <strong>Errores comunes a evitar:</strong>
+                <ul style="margin-top: 0.5rem;">
+                    <li>Hacer check-in sin verificar que la habitación esté limpia</li>
+                    <li>Olvidar registrar el documento de identidad (puede causar problemas legales)</li>
+                    <li>No confirmar el método de pago antes de entregar la llave</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 18: FLUJO CHECK-OUT -->
+        <section id="flujo-checkout" class="section">
+            <div class="section-header">
+                <span class="material-icons">logout</span>
+                <div>
+                    <h1 class="section-title">Flujo: Check-Out Paso a Paso</h1>
+                    <p class="section-subtitle">Cómo registrar la salida de un huésped</p>
+                </div>
+            </div>
+
+            <div class="callout callout-tip">
+                💡 <strong>Importante:</strong> El check-out es el momento crítico para cobrar. Revisa TODOS los cargos antes de generar la factura para evitar problemas posteriores.
+            </div>
+
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">📋</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 1: Buscar la Reserva</div>
+                        <p>Ve a <strong>Recepción → Panel Interactivo</strong> o <strong>Gestión Reservas</strong></p>
+                        <p>Busca la reserva del huésped que está saliendo por apellido o número de habitación.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">💰</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 2: Abrir y Revisar la Cuenta</div>
+                        <p>Haz clic en la cuenta del huésped y verifica <strong>TODOS</strong> los cargos:</p>
+                        <ul>
+                            <li><strong>Habitación:</strong> Verifica que estén todas las noches</li>
+                            <li><strong>Restaurante:</strong> Desayunos, almuerzos, cenas</li>
+                            <li><strong>Minibar:</strong> Si aplica</li>
+                            <li><strong>Llamadas telefónicas:</strong> Si las hubo</li>
+                            <li><strong>Servicios adicionales:</strong> Lavandería, spa, parking, etc.</li>
+                        </ul>
+                        <p><strong>Pregunta al huésped:</strong> "¿Consumió algo del minibar?" o "¿Utilizó algún servicio adicional?"</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">⚖️</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 3: Resolver Discrepancias</div>
+                        <p><strong>Si el huésped cuestiona algún cargo:</strong></p>
+                        <ul>
+                            <li>Escucha su reclamo con atención</li>
+                            <li>Verifica el cargo en el sistema (fecha, hora, concepto)</li>
+                            <li>Si es un error del hotel, elimina el cargo inmediatamente</li>
+                            <li>Si es válido, explica el cargo con cortesía</li>
+                            <li>En caso de duda, consulta con tu supervisor</li>
+                        </ul>
+                        <p><strong>⚠️ NUNCA factures si hay cargos en disputa.</strong> Resuélvelos primero.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">🧾</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 4: Generar la Factura</div>
+                        <p>Una vez confirmados todos los cargos:</p>
+                        <ol>
+                            <li>Ve a <strong>Facturar → Histórico de Documentos</strong> o usa el botón de facturar en la cuenta</li>
+                            <li>Verifica los datos fiscales del cliente (nombre, RUC/NIT si aplica)</li>
+                            <li>Genera la factura</li>
+                            <li>Revisa que el total sea correcto antes de imprimir</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">💳</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 5: Cobrar el Importe</div>
+                        <p>Según el método de pago acordado:</p>
+                        <ul>
+                            <li><strong>Tarjeta de crédito:</strong> Procesa el pago. Si había pre-autorización, ajústala al monto final</li>
+                            <li><strong>Efectivo:</strong> Recibe el pago y entrega el cambio si aplica</li>
+                            <li><strong>Transferencia:</strong> Confirma que se haya recibido</li>
+                            <li><strong>Cuenta empresa:</strong> Genera la factura a nombre de la empresa</li>
+                        </ul>
+                        <p>Registra el pago en el sistema.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">✅</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 6: Hacer Click en Check-Out</div>
+                        <p>En la reserva, haz clic en el botón <strong>"Check-Out"</strong></p>
+                        <p>El sistema te pedirá confirmar. Verifica que todo esté correcto antes de confirmar.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">🧹</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 7: Check-Out Completado</div>
+                        <p>El sistema automáticamente:</p>
+                        <ul>
+                            <li>Libera la habitación</li>
+                            <li>Cambia el estado a <strong>"Sucia"</strong> (círculo amarillo)</li>
+                            <li>Envía notificación al Ama de Llaves para limpieza</li>
+                            <li>Cierra la cuenta del huésped</li>
+                        </ul>
+                        <p><strong>Despide al huésped:</strong> Agradece su estadía, pregunta si todo estuvo bien y desea buen viaje.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="callout callout-danger">
+                ⚠️ <strong>Errores críticos a evitar:</strong>
+                <ul style="margin-top: 0.5rem;">
+                    <li><strong>Hacer check-out sin cobrar:</strong> Después del check-out es muy difícil cobrar</li>
+                    <li><strong>No revisar el minibar:</strong> Pérdida de ingresos</li>
+                    <li><strong>Facturar con cargos incorrectos:</strong> Genera quejas y mala reputación</li>
+                    <li><strong>No verificar que el pago se procesó correctamente:</strong> Puede resultar en pérdida total</li>
+                </ul>
+            </div>
+
+            <div class="card" style="background: #e8f5e9; border-left: 4px solid #4caf50;">
+                <h3 style="color: #2e7d32;">✅ Checklist Final de Check-Out</h3>
+                <ul style="line-height: 2; margin-top: 1rem;">
+                    <li>☑️ Todos los cargos revisados y confirmados</li>
+                    <li>☑️ Factura generada con datos correctos</li>
+                    <li>☑️ Pago recibido y registrado</li>
+                    <li>☑️ Check-out marcado en el sistema</li>
+                    <li>☑️ Habitación pasa a estado "Sucia"</li>
+                    <li>☑️ Huésped despedido cordialmente</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 19: FLUJO NUEVA RESERVA -->
+        <section id="flujo-reserva" class="section">
+            <div class="section-header">
+                <span class="material-icons">add_circle</span>
+                <div>
+                    <h1 class="section-title">Flujo: Crear Nueva Reserva</h1>
+                    <p class="section-subtitle">Cómo registrar una reserva manual paso a paso</p>
+                </div>
+            </div>
+
+            <div class="callout callout-tip">
+                💡 <strong>Antes de crear una reserva nueva:</strong> Siempre busca primero al huésped en el Cardex. Si ya existe, usa su perfil para mantener el historial completo.
+            </div>
+
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">📅</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 1: Ir a Nueva Reserva</div>
+                        <p>Ve a <strong>Reservas → Nueva Reserva</strong></p>
+                        <p>Se abrirá el formulario de creación de reserva.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">🗓️</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 2: Ingresar Fechas</div>
+                        <p>Completa:</p>
+                        <ul>
+                            <li><strong>Fecha de entrada (Check-In):</strong> Día que llega el huésped</li>
+                            <li><strong>Fecha de salida (Check-Out):</strong> Día que se va</li>
+                        </ul>
+                        <p>El sistema calculará automáticamente el número de noches.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">🛏️</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 3: Seleccionar Tipo de Habitación</div>
+                        <p>Elige el tipo de habitación según la solicitud del huésped:</p>
+                        <ul>
+                            <li><strong>CIVK</strong> - City View King (vista ciudad, cama king)</li>
+                            <li><strong>CIVD</strong> - City View Double (vista ciudad, dos camas)</li>
+                            <li><strong>EXEK</strong> - Executive King (ejecutiva, cama king)</li>
+                            <li><strong>CRST</strong> - Crystal Suite (suite)</li>
+                        </ul>
+                        <p>El sistema mostrará la disponibilidad para esas fechas.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">👤</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 4: Ingresar Número de Personas</div>
+                        <p>Especifica:</p>
+                        <ul>
+                            <li><strong>Número de adultos:</strong> Personas mayores de 12 años</li>
+                            <li><strong>Número de niños:</strong> Menores de 12 años (si aplica)</li>
+                        </ul>
+                        <p>Esto afecta el precio y los servicios (desayunos, etc.)</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">🍽️</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 5: Seleccionar Pensión (Régimen Alimenticio)</div>
+                        <p>Elige el plan de comidas:</p>
+                        <ul>
+                            <li><strong>SA</strong> - Solo Alojamiento (sin comidas)</li>
+                            <li><strong>BB</strong> - Bed & Breakfast (con desayuno)</li>
+                            <li><strong>HB</strong> - Half Board / Media Pensión (desayuno + cena)</li>
+                            <li><strong>FB</strong> - Full Board / Pensión Completa (desayuno + almuerzo + cena)</li>
+                            <li><strong>AI</strong> - All Inclusive / Todo Incluido (si aplica)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">💵</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 6: El Sistema Calcula el Precio</div>
+                        <p>Automáticamente, el sistema:</p>
+                        <ul>
+                            <li>Busca la tarifa vigente para esas fechas</li>
+                            <li>Calcula el precio total según el número de noches</li>
+                            <li>Aplica el régimen de pensión seleccionado</li>
+                            <li>Muestra el precio total al huésped</li>
+                        </ul>
+                        <p>Si el precio no es correcto, verifica que las tarifas estén bien configuradas.</p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">🔍</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 7: Buscar o Crear Perfil del Huésped</div>
+                        <p><strong>MUY IMPORTANTE:</strong> Busca primero en el <strong>Cardex</strong></p>
+                        <ul>
+                            <li>Si el huésped ya existe: Selecciona su perfil</li>
+                            <li>Si es nuevo: Crea un perfil nuevo con sus datos:
+                                <ul>
+                                    <li>Nombre completo</li>
+                                    <li>Email</li>
+                                    <li>Teléfono</li>
+                                    <li>Nacionalidad</li>
+                                    <li>Documento de identidad (puedes completarlo en el check-in)</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">📊</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 8: Asignar Origen y Segmento de Mercado</div>
+                        <p><strong>Origen de Mercado</strong> (¿Cómo llegó la reserva?):</p>
+                        <ul>
+                            <li>Walk-in (llegó sin reserva)</li>
+                            <li>Teléfono</li>
+                            <li>Web propia del hotel</li>
+                            <li>Booking.com, Expedia u otra OTA</li>
+                            <li>Agencia de viajes</li>
+                        </ul>
+                        <p><strong>Segmento de Mercado</strong> (¿Qué tipo de cliente es?):</p>
+                        <ul>
+                            <li>Corporativo / Empresa</li>
+                            <li>Vacacional / Turismo</li>
+                            <li>Grupo</li>
+                            <li>Gobierno</li>
+                        </ul>
+                        <p><em>Esto es importante para las estadísticas y análisis comercial.</em></p>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">🔒</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 9: Seleccionar Tipo de Garantía</div>
+                        <p>Elige cómo se garantiza la reserva:</p>
+                        <ul>
+                            <li><strong>Tarjeta de crédito:</strong> Toma los datos de la tarjeta (puedes hacer pre-autorización)</li>
+                            <li><strong>Depósito:</strong> El huésped paga un adelanto</li>
+                            <li><strong>Sin garantía:</strong> Solo para clientes conocidos o empresas con crédito</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">💾</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 10: Guardar la Reserva</div>
+                        <p>Haz clic en <strong>"Guardar"</strong></p>
+                        <p>El sistema automáticamente:</p>
+                        <ul>
+                            <li>Genera un <strong>número de confirmación</strong> único</li>
+                            <li>Registra la reserva en el sistema</li>
+                            <li>Actualiza la disponibilidad</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">📧</div>
+                    <div class="step-content">
+                        <div class="step-title">Paso 11: Enviar Confirmación al Huésped</div>
+                        <p>Desde la reserva creada, puedes:</p>
+                        <ul>
+                            <li><strong>Imprimir</strong> la confirmación para entregarla en mano</li>
+                            <li><strong>Enviar por email</strong> la confirmación automáticamente</li>
+                        </ul>
+                        <p>La confirmación incluye:</p>
+                        <ul>
+                            <li>Número de confirmación</li>
+                            <li>Fechas de estadía</li>
+                            <li>Tipo de habitación</li>
+                            <li>Régimen de pensión</li>
+                            <li>Precio total</li>
+                            <li>Políticas de cancelación</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="background: #fff3e0; border-left: 4px solid #ff9800;">
+                <h3 style="color: #e65100;">⚠️ Puntos Importantes al Crear Reservas</h3>
+                <ul style="line-height: 2; margin-top: 1rem;">
+                    <li><strong>Verifica disponibilidad:</strong> Antes de confirmar al cliente, asegúrate de que haya habitaciones disponibles</li>
+                    <li><strong>Explica las políticas:</strong> Informa al huésped sobre políticas de cancelación, hora de check-in/out, etc.</li>
+                    <li><strong>Confirma el precio:</strong> Asegúrate de que el cliente entienda el precio total y qué incluye</li>
+                    <li><strong>Toma datos completos:</strong> Email y teléfono son esenciales para contactar al huésped</li>
+                    <li><strong>No duplicar perfiles:</strong> Siempre busca en el Cardex antes de crear un perfil nuevo</li>
+                </ul>
+            </div>
+
+            <div class="card" style="background: #e3f2fd; border-left: 4px solid #2196f3;">
+                <h3 style="color: #1565c0;">💡 Consejos para Reservas Telefónicas</h3>
+                <p style="margin-top: 1rem;">Cuando tomes una reserva por teléfono, sigue este orden:</p>
+                <ol style="line-height: 2;">
+                    <li>Saluda y pregunta las fechas deseadas</li>
+                    <li>Consulta disponibilidad en el sistema</li>
+                    <li>Describe los tipos de habitación disponibles y sus precios</li>
+                    <li>Una vez el cliente decida, toma sus datos completos</li>
+                    <li>Explica las políticas de cancelación y pago</li>
+                    <li>Crea la reserva en el sistema</li>
+                    <li>Confirma el número de reserva al cliente</li>
+                    <li>Envía la confirmación por email inmediatamente</li>
+                </ol>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <p><strong>Guía generada para Global Hotel Panamá</strong></p>
+        <p>PMS Newhotel Cloud • 2026</p>
+        <p style="margin-top: 1rem; color: var(--text-light); font-size: 0.9rem;">
+            Esta guía cubre todos los módulos y flujos de trabajo del sistema PMS Newhotel Cloud.<br>
+            Para soporte técnico, contacta al equipo de Newhotel Software.
+        </p>
+    </footer>
+
+    <button class="back-to-top" onclick="scrollToTop()">
+        <span class="material-icons">arrow_upward</span>
+    </button>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            
+            const icon = document.querySelector('.theme-toggle .material-icons');
+            icon.textContent = newTheme === 'dark' ? 'light_mode' : 'dark_mode';
+        }
+
+        function toggleMenu() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function setActive(element) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            element.classList.add('active');
+            
+            const text = element.textContent.trim();
+            document.getElementById('breadcrumbText').textContent = text;
+
+            // Cerrar menú en móvil después de seleccionar
+            if (window.innerWidth <= 1024) {
+                const sidebar = document.querySelector('.sidebar');
+                const overlay = document.querySelector('.sidebar-overlay');
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        }
+
+        function filterSections() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(filter)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.onscroll = function() {
+            const backToTop = document.querySelector('.back-to-top');
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                backToTop.style.display = 'flex';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstNavItem = document.querySelector('.nav-item');
+            if (firstNavItem) {
+                firstNavItem.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

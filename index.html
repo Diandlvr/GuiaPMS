@@ -261,6 +261,7 @@
         .section {
             margin-bottom: 3rem;
             scroll-margin-top: 90px;
+            transition: opacity 0.25s ease;
         }
 
         .section-header {
@@ -769,8 +770,8 @@
 
     <nav class="sidebar">
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Buscar en la guía..." onkeyup="filterSections()" aria-label="Buscar secciones">
-            <div class="search-hint">Atajo: <kbd>/</kbd> o <kbd>S</kbd></div>
+            <input type="text" id="searchInput" placeholder="Buscar en toda la guía..." onkeyup="filterSections()" aria-label="Buscar secciones">
+            <div class="search-hint">Atajo: <kbd>/</kbd> o <kbd>S</kbd> · <span id="searchResultCount"></span></div>
         </div>
         <div class="nav-section">
             <a href="#resumen" class="nav-item" onclick="setActive(this)">
@@ -2491,24 +2492,59 @@
 
         // ========== SEARCH ==========
         let searchTimeout;
+        let lastSearchQuery = '';
         function filterSections() {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
                 const q = document.getElementById('searchInput').value.toLowerCase().trim();
-                const navItems = document.querySelectorAll('.nav-item');
-                navItems.forEach(item => {
-                    item.style.display = item.textContent.toLowerCase().includes(q) ? 'flex' : 'none';
-                });
-                // Also highlight matching section content
                 const sections = document.querySelectorAll('.section');
-                if (q.length > 0) {
-                    sections.forEach(sec => {
-                        const match = sec.textContent.toLowerCase().includes(q);
-                        sec.style.opacity = match ? '1' : '0.3';
-                    });
-                } else {
-                    sections.forEach(sec => sec.style.opacity = '1');
+                const navItems = document.querySelectorAll('.nav-item');
+                const resultCount = document.getElementById('searchResultCount');
+
+                if (q.length === 0) {
+                    sections.forEach(sec => { sec.style.opacity = '1'; sec.style.display = 'block'; });
+                    navItems.forEach(item => item.style.display = 'flex');
+                    if (resultCount) resultCount.textContent = '';
+                    lastSearchQuery = '';
+                    return;
                 }
+
+                let firstMatch = null;
+                let matchCount = 0;
+
+                sections.forEach(sec => {
+                    const match = sec.textContent.toLowerCase().includes(q);
+                    sec.style.opacity = match ? '1' : '0.2';
+                    sec.style.display = 'block';
+                    if (match) {
+                        matchCount++;
+                        if (!firstMatch) firstMatch = sec;
+                    }
+                });
+
+                // Filter nav items to show only matching sections + their nav links
+                navItems.forEach(item => {
+                    const href = item.getAttribute('href');
+                    if (!href) return;
+                    const target = document.querySelector(href);
+                    const match = target && target.textContent.toLowerCase().includes(q);
+                    item.style.display = match ? 'flex' : 'none';
+                });
+
+                // Show result feedback
+                if (resultCount) {
+                    const label = matchCount === 1 ? 'sección encontrada' : 'secciones encontradas';
+                    resultCount.textContent = matchCount > 0 ? `${matchCount} ${label}` : 'Sin resultados';
+                    resultCount.style.color = matchCount > 0 ? 'var(--success)' : 'var(--danger)';
+                }
+
+                // Scroll to first match if query changed
+                if (firstMatch && q !== lastSearchQuery) {
+                    const offset = 90;
+                    const top = firstMatch.getBoundingClientRect().top + window.scrollY - offset;
+                    window.scrollTo({ top, behavior: 'smooth' });
+                }
+                lastSearchQuery = q;
             }, 200);
         }
 
